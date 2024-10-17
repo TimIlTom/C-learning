@@ -10,10 +10,10 @@ void live(char *cell);
 
 void copyWorld(char startWorld[height][length], char endWorld[height][length]);
 
-void isolamento(char startWorld[height][length], char endWorld[height][length]);
-void sopravvivenza(char startWorld[height][length], char endWorld[height][length]);
-void sovrappopolazione(char startWorld[height][length], char endWorld[height][length]);
-void riproduzione(char startWorld[height][length], char endWorld[height][length]);
+void isolation(char startWorld[height][length], char endWorld[height][length]);
+void survival(char startWorld[height][length], char endWorld[height][length]);
+void overpopulation(char startWorld[height][length], char endWorld[height][length]);
+void reproduction(char startWorld[height][length], char endWorld[height][length]);
 
 int main(){
 
@@ -37,7 +37,7 @@ int main(){
 
     copyWorld(startWorld, middleWorld);
 
-    isolamento(startWorld, middleWorld);
+    isolation(startWorld, middleWorld);
 
     copyWorld(middleWorld, startWorld);
 
@@ -59,7 +59,7 @@ void printWorld(char world[height][length]){
     }
 }
 
-void isolamento(char startWorld[height][length], char endWorld[height][length]){
+void isolation(char startWorld[height][length], char endWorld[height][length]){
 
     int n_neighbour = 0;
 
@@ -99,11 +99,11 @@ void copyWorld(char startWorld[height][length], char endWorld[height][length]){
     }
 }
 
-//void sopravvivenza(char world[height][length]);
+//void survival(char world[height][length]);
 
-//void sovrappopolazione(char world[height][length]);
+//void overpopulation(char world[height][length]);
 
-//void riproduzione(char world[height][length]);
+//void reproduction(char world[height][length]);
 
 void die(char *cell){
 
