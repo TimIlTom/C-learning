@@ -1,7 +1,7 @@
 #include <stdio.h>
 
-const int height = 10;
-const int length = 10;
+const int height = 20;
+const int length = 20;
 
 void printWorld(char world[height][length]);
 
@@ -11,37 +11,51 @@ void live(char *cell);
 void copyWorld(char startWorld[height][length], char endWorld[height][length]);
 
 void isolation(char startWorld[height][length], char endWorld[height][length]);
-void survival(char startWorld[height][length], char endWorld[height][length]);
 void overpopulation(char startWorld[height][length], char endWorld[height][length]);
 void reproduction(char startWorld[height][length], char endWorld[height][length]);
 
 int main(){
 
-    char startWorld[10][10] = 
+    char startWorld[20][20] = 
     {
-        {'X','X','X','X','X','X','X','X','X','X'},
-        {'X','X','O','X','X','X','X','X','X','X'},
-        {'X','X','O','X','X','X','X','X','X','X'},
-        {'X','X','X','X','X','X','X','X','X','X'},
-        {'X','X','X','X','X','X','X','X','X','X'},
-        {'X','X','X','X','X','X','X','X','X','X'},
-        {'X','X','X','X','X','X','X','X','X','X'},
-        {'X','X','X','X','X','X','X','X','X','X'},
-        {'X','X','X','X','X','X','X','X','X','X'},
-        {'X','X','X','X','X','X','X','X','X','X'}
+        {'-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-'},
+        {'-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-'},
+        {'-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-'},
+        {'-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-'},
+        {'-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-'},
+        {'-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-'},
+        {'-','-','-','-','-','-','-','|','-','-','-','-','-','-','-','-','-','-','-','-'},
+        {'-','-','-','-','-','|','-','|','-','-','-','-','-','-','-','-','-','-','-','-'},
+        {'-','-','-','|','|','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-'},
+        {'-','-','-','|','|','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-'},
+        {'-','-','-','|','|','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-'},
+        {'-','-','-','-','-','|','-','|','-','-','-','-','-','-','-','-','-','-','-','-'},
+        {'-','-','-','-','-','-','-','|','-','-','-','-','-','-','-','-','-','-','-','-'},
+        {'-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-'},
+        {'-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-'},
+        {'-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-'},
+        {'-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-'},
+        {'-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-'},
+        {'-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-'},
+        {'-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-'},
     };
 
-    char middleWorld[10][10];
+    int n_generations = 10;
 
-    printWorld(startWorld);
+    char middleWorld[20][20];
 
-    copyWorld(startWorld, middleWorld);
+    for(int i = 0; i < n_generations; i++){
 
-    isolation(startWorld, middleWorld);
+        printWorld(startWorld);
 
-    copyWorld(middleWorld, startWorld);
+        copyWorld(startWorld, middleWorld);
 
-    printWorld(startWorld);
+        isolation(startWorld, middleWorld);
+        overpopulation(startWorld, middleWorld);
+        reproduction(startWorld, middleWorld);
+
+        copyWorld(middleWorld, startWorld);
+    }
 
     return 0;
 }
@@ -49,13 +63,23 @@ int main(){
 void printWorld(char world[height][length]){
 
     printf("\n");
-    for(int i = 0; i < length; i++){
+    for(int i = 0; i < height; i++){
 
-        for (int j = 0; j < height; j++){
+        for (int j = 0; j < length; j++){
 
             printf("%c ", world[i][j]);
         }
         printf("\n");
+    }
+}
+void copyWorld(char startWorld[height][length], char endWorld[height][length]){
+
+    for(int i = 0; i < height; i++){
+
+        for (int j = 0; j < length; j++){
+
+            endWorld[i][j] = startWorld[i][j];
+        }
     }
 }
 
@@ -69,18 +93,18 @@ void isolation(char startWorld[height][length], char endWorld[height][length]){
             n_neighbour = 0;
 
             //controllo le 3 celle sopra della cella di riferimento
-            if(startWorld[i-1][j-1] == 'O') n_neighbour++;
-            if(startWorld[i-1][j] == 'O') n_neighbour++;
-            if(startWorld[i-1][j+1] == 'O') n_neighbour++;
+            if(startWorld[i-1][j-1] == '|') n_neighbour++;
+            if(startWorld[i-1][j] == '|') n_neighbour++;
+            if(startWorld[i-1][j+1] == '|') n_neighbour++;
 
             //controllo 2 celle adiacenti
-            if(startWorld[i][j-1] == 'O') n_neighbour++;
-            if(startWorld[i][j+1] == 'O') n_neighbour++;
+            if(startWorld[i][j-1] == '|') n_neighbour++;
+            if(startWorld[i][j+1] == '|') n_neighbour++;
 
             //controllo 3 celle sotto la cella di riferimento
-            if(startWorld[i+1][j-1] == 'O') n_neighbour++;
-            if(startWorld[i+1][j] == 'O') n_neighbour++;
-            if(startWorld[i+1][j+1] == 'O') n_neighbour++;
+            if(startWorld[i+1][j-1] == '|') n_neighbour++;
+            if(startWorld[i+1][j] == '|') n_neighbour++;
+            if(startWorld[i+1][j+1] == '|') n_neighbour++;
             //printf("world[%d][%d] ha %d vicini\n", i, j, n_neighbour);
 
             if(n_neighbour < 2) die(&endWorld[i][j]);
@@ -88,29 +112,70 @@ void isolation(char startWorld[height][length], char endWorld[height][length]){
     }
 }
 
-void copyWorld(char startWorld[height][length], char endWorld[height][length]){
+void overpopulation(char startWorld[height][length], char endWorld[height][length]){
 
-    for(int i = 0; i < length; i++){
+    int n_neighbour = 0;
 
-        for (int j = 0; j < height; j++){
+    for(int i = 1; i < height-1; i++){
+        for(int j = 1; j < length-1; j++){
+            
+            n_neighbour = 0;
 
-            endWorld[i][j] = startWorld[i][j];
+            //controllo le 3 celle sopra della cella di riferimento
+            if(startWorld[i-1][j-1] == '|') n_neighbour++;
+            if(startWorld[i-1][j] == '|') n_neighbour++;
+            if(startWorld[i-1][j+1] == '|') n_neighbour++;
+
+            //controllo 2 celle adiacenti
+            if(startWorld[i][j-1] == '|') n_neighbour++;
+            if(startWorld[i][j+1] == '|') n_neighbour++;
+
+            //controllo 3 celle sotto la cella di riferimento
+            if(startWorld[i+1][j-1] == '|') n_neighbour++;
+            if(startWorld[i+1][j] == '|') n_neighbour++;
+            if(startWorld[i+1][j+1] == '|') n_neighbour++;
+            //printf("world[%d][%d] ha %d vicini\n", i, j, n_neighbour);
+
+            if(n_neighbour > 3) die(&endWorld[i][j]);
         }
     }
 }
 
-//void survival(char world[height][length]);
+void reproduction(char startWorld[height][length], char endWorld[height][length]){
 
-//void overpopulation(char world[height][length]);
+    int n_neighbour = 0;
 
-//void reproduction(char world[height][length]);
+    for(int i = 1; i < height-1; i++){
+        for(int j = 1; j < length-1; j++){
+            
+            n_neighbour = 0;
+
+            //controllo le 3 celle sopra della cella di riferimento
+            if(startWorld[i-1][j-1] == '|') n_neighbour++;
+            if(startWorld[i-1][j] == '|') n_neighbour++;
+            if(startWorld[i-1][j+1] == '|') n_neighbour++;
+
+            //controllo 2 celle adiacenti
+            if(startWorld[i][j-1] == '|') n_neighbour++;
+            if(startWorld[i][j+1] == '|') n_neighbour++;
+
+            //controllo 3 celle sotto la cella di riferimento
+            if(startWorld[i+1][j-1] == '|') n_neighbour++;
+            if(startWorld[i+1][j] == '|') n_neighbour++;
+            if(startWorld[i+1][j+1] == '|') n_neighbour++;
+            //printf("world[%d][%d] ha %d vicini\n", i, j, n_neighbour);
+
+            if(n_neighbour == 3) live(&endWorld[i][j]);
+        }
+    }
+}
 
 void die(char *cell){
 
-    *cell = 'X';
+    *cell = '-';
 }
 
 void live(char *cell){
 
-    *cell = 'O';
+    *cell = '|';
 }
