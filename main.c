@@ -10,9 +10,7 @@ void live(char *cell);
 
 void copyWorld(char startWorld[height][length], char endWorld[height][length]);
 
-void isolation(char startWorld[height][length], char endWorld[height][length]);
-void overpopulation(char startWorld[height][length], char endWorld[height][length]);
-void reproduction(char startWorld[height][length], char endWorld[height][length]);
+void evolve(char startWorld[height][length], char endWorld[height][length]);
 
 int main(){
 
@@ -24,13 +22,13 @@ int main(){
         {'-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-'},
         {'-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-'},
         {'-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-'},
-        {'-','-','-','-','-','-','-','|','-','-','-','-','-','-','-','-','-','-','-','-'},
-        {'-','-','-','-','-','|','-','|','-','-','-','-','-','-','-','-','-','-','-','-'},
-        {'-','-','-','|','|','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-'},
-        {'-','-','-','|','|','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-'},
-        {'-','-','-','|','|','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-'},
-        {'-','-','-','-','-','|','-','|','-','-','-','-','-','-','-','-','-','-','-','-'},
-        {'-','-','-','-','-','-','-','|','-','-','-','-','-','-','-','-','-','-','-','-'},
+        {'-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-'},
+        {'-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-'},
+        {'-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-'},
+        {'-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-'},
+        {'-','-','-','-','-','-','-','-','|','|','|','-','-','-','-','-','-','-','-','-'},
+        {'-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-'},
+        {'-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-'},
         {'-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-'},
         {'-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-'},
         {'-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-'},
@@ -50,9 +48,7 @@ int main(){
 
         copyWorld(startWorld, middleWorld);
 
-        isolation(startWorld, middleWorld);
-        overpopulation(startWorld, middleWorld);
-        reproduction(startWorld, middleWorld);
+        evolve(startWorld, middleWorld);
 
         copyWorld(middleWorld, startWorld);
     }
@@ -72,6 +68,7 @@ void printWorld(char world[height][length]){
         printf("\n");
     }
 }
+
 void copyWorld(char startWorld[height][length], char endWorld[height][length]){
 
     for(int i = 0; i < height; i++){
@@ -83,7 +80,7 @@ void copyWorld(char startWorld[height][length], char endWorld[height][length]){
     }
 }
 
-void isolation(char startWorld[height][length], char endWorld[height][length]){
+void evolve(char startWorld[height][length], char endWorld[height][length]){
 
     int n_neighbour = 0;
 
@@ -105,66 +102,8 @@ void isolation(char startWorld[height][length], char endWorld[height][length]){
             if(startWorld[i+1][j-1] == '|') n_neighbour++;
             if(startWorld[i+1][j] == '|') n_neighbour++;
             if(startWorld[i+1][j+1] == '|') n_neighbour++;
-            //printf("world[%d][%d] ha %d vicini\n", i, j, n_neighbour);
 
-            if(n_neighbour < 2) die(&endWorld[i][j]);
-        }
-    }
-}
-
-void overpopulation(char startWorld[height][length], char endWorld[height][length]){
-
-    int n_neighbour = 0;
-
-    for(int i = 1; i < height-1; i++){
-        for(int j = 1; j < length-1; j++){
-            
-            n_neighbour = 0;
-
-            //controllo le 3 celle sopra della cella di riferimento
-            if(startWorld[i-1][j-1] == '|') n_neighbour++;
-            if(startWorld[i-1][j] == '|') n_neighbour++;
-            if(startWorld[i-1][j+1] == '|') n_neighbour++;
-
-            //controllo 2 celle adiacenti
-            if(startWorld[i][j-1] == '|') n_neighbour++;
-            if(startWorld[i][j+1] == '|') n_neighbour++;
-
-            //controllo 3 celle sotto la cella di riferimento
-            if(startWorld[i+1][j-1] == '|') n_neighbour++;
-            if(startWorld[i+1][j] == '|') n_neighbour++;
-            if(startWorld[i+1][j+1] == '|') n_neighbour++;
-            //printf("world[%d][%d] ha %d vicini\n", i, j, n_neighbour);
-
-            if(n_neighbour > 3) die(&endWorld[i][j]);
-        }
-    }
-}
-
-void reproduction(char startWorld[height][length], char endWorld[height][length]){
-
-    int n_neighbour = 0;
-
-    for(int i = 1; i < height-1; i++){
-        for(int j = 1; j < length-1; j++){
-            
-            n_neighbour = 0;
-
-            //controllo le 3 celle sopra della cella di riferimento
-            if(startWorld[i-1][j-1] == '|') n_neighbour++;
-            if(startWorld[i-1][j] == '|') n_neighbour++;
-            if(startWorld[i-1][j+1] == '|') n_neighbour++;
-
-            //controllo 2 celle adiacenti
-            if(startWorld[i][j-1] == '|') n_neighbour++;
-            if(startWorld[i][j+1] == '|') n_neighbour++;
-
-            //controllo 3 celle sotto la cella di riferimento
-            if(startWorld[i+1][j-1] == '|') n_neighbour++;
-            if(startWorld[i+1][j] == '|') n_neighbour++;
-            if(startWorld[i+1][j+1] == '|') n_neighbour++;
-            //printf("world[%d][%d] ha %d vicini\n", i, j, n_neighbour);
-
+            if(n_neighbour < 2 || n_neighbour > 3) die(&endWorld[i][j]);
             if(n_neighbour == 3) live(&endWorld[i][j]);
         }
     }
