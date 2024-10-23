@@ -15,22 +15,23 @@ void evolve(char startWorld[height][length], char endWorld[height][length]);
 
 int main(){
 
-    char **heightWorld = (char **)malloc(height * sizeof(char *));
+    // creation of the empty world
+    char **world = (char **)malloc(height * sizeof(char *));
 
     for(int i = 0; i < height; i++){
 
-        *(heightWorld+i) = (char *)malloc(length * sizeof(char));
+        *(world+i) = (char *)malloc(length * sizeof(char));
     }
 
     for(int i = 0; i < height; i++){
 
         for(int j = 0; j < length; j++){
 
-            heightWorld[i][j] = '-';
+            world[i][j] = '-';
         }
     }
 
-    printWorld(heightWorld);
+    printWorld(world);
 
     /*int n_generations = 10;
 
