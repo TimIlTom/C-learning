@@ -1,17 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-const int height = 20;
-const int length = 20;
+const int height = 5;
+const int length = 7; //lenght size = height + 2 -> for the \n character and \0
 
 void printWorld(char **world);
-
 void die(char *cell);
 void live(char *cell);
-
-void copyWorld(char startWorld[height][length], char endWorld[height][length]);
-
-void evolve(char startWorld[height][length], char endWorld[height][length]);
+void **copyWorld(char **startWorld);
+void evolve(char **startWorld, char **endWorld);
 
 int main(){
 
@@ -23,32 +20,33 @@ int main(){
         *(world+i) = (char *)malloc(length * sizeof(char));
     }
 
+    // populating the world with data in the world.txt file
+    FILE *worldFile = fopen("world.txt", "r");
+
     for(int i = 0; i < height; i++){
 
-        for(int j = 0; j < length; j++){
-
-            world[i][j] = '-';
-        }
+        fgets(*(world+i), length, worldFile);
     }
 
-    printWorld(world);
+    char **worldCopy;
 
-    /*int n_generations = 10;
+    int n_generations = 10;
 
-    char middleWorld[20][20];*/
-
-    /*
+    
     for(int i = 0; i < n_generations; i++){
 
-        printWorld(startWorld);
+        printWorld(world);
 
-        copyWorld(startWorld, middleWorld);
+        worldCopy = copyWorld(world);
 
-        evolve(startWorld, middleWorld);
+        printf("MONDO COPIATO:\n");
+        printWorld(worldCopy);
 
-        copyWorld(middleWorld, startWorld);
+        evolve(world, worldCopy);
+
+        free(worldCopy);
     }
-    */
+    
 
     return 0;
 }
@@ -58,7 +56,7 @@ void printWorld(char **world){
     printf("\n");
     for(int i = 0; i < height; i++){
 
-        for (int j = 0; j < length; j++){
+        for (int j = 0; j < length-2; j++){
 
             printf("%c ", world[i][j]);
         }
@@ -66,23 +64,32 @@ void printWorld(char **world){
     }
 }
 
-void copyWorld(char startWorld[height][length], char endWorld[height][length]){
+void **copyWorld(char **startWorld){
+
+    char **worldCopy = (char **)malloc(height * sizeof(char **));
 
     for(int i = 0; i < height; i++){
 
-        for (int j = 0; j < length; j++){
+        *(worldCopy+i) = (char *)malloc(length * sizeof(char));
+    }
 
-            endWorld[i][j] = startWorld[i][j];
+    for(int i = 0; i < height; i++){
+
+        for(int j = 0; j < length -2; j++){
+
+            worldCopy[i][j] = startWorld[i][j];
         }
     }
+
+    return worldCopy;
 }
 
-void evolve(char startWorld[height][length], char endWorld[height][length]){
+void evolve(char **startWorld, char **endWorld){
 
     int n_neighbour = 0;
 
-    for(int i = 1; i < height-1; i++){
-        for(int j = 1; j < length-1; j++){
+    for(int i = 1; i < height-3; i++){
+        for(int j = 1; j < length-3; j++){
             
             n_neighbour = 0;
 
