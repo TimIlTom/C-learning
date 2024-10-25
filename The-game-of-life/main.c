@@ -7,7 +7,7 @@ const int length = 7; //lenght size = height + 2 -> for the \n character and \0
 void printWorld(char **world);
 void die(char *cell);
 void live(char *cell);
-void **copyWorld(char **startWorld);
+char **copyWorld(char **startWorld);
 void evolve(char **startWorld, char **endWorld);
 
 int main(){
@@ -39,10 +39,9 @@ int main(){
 
         worldCopy = copyWorld(world);
 
-        printf("MONDO COPIATO:\n");
-        printWorld(worldCopy);
-
         evolve(world, worldCopy);
+
+        world = copyWorld(worldCopy);
 
         free(worldCopy);
     }
@@ -64,7 +63,7 @@ void printWorld(char **world){
     }
 }
 
-void **copyWorld(char **startWorld){
+char **copyWorld(char **startWorld){
 
     char **worldCopy = (char **)malloc(height * sizeof(char **));
 
@@ -88,7 +87,7 @@ void evolve(char **startWorld, char **endWorld){
 
     int n_neighbour = 0;
 
-    for(int i = 1; i < height-3; i++){
+    for(int i = 1; i <= height-2; i++){
         for(int j = 1; j < length-3; j++){
             
             n_neighbour = 0;
@@ -107,8 +106,10 @@ void evolve(char **startWorld, char **endWorld){
             if(startWorld[i+1][j] == '|') n_neighbour++;
             if(startWorld[i+1][j+1] == '|') n_neighbour++;
 
-            if(n_neighbour < 2 || n_neighbour > 3) die(&endWorld[i][j]);
-            if(n_neighbour == 3) live(&endWorld[i][j]);
+            //printf("cella[%d][%d]: %d vicini\n",i, j, n_neighbour);
+
+            if(n_neighbour < 2 || n_neighbour > 3) endWorld[i][j] = '-';
+            if(n_neighbour == 3) endWorld[i][j] = '|';
         }
     }
 }
