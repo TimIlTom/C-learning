@@ -1,14 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-const int height = 5;
-const int length = 7; //lenght size = height + 2 -> for the \n character and \0
+int height = 5;
+int length = 7; //lenght size = height + 2 -> for the \n character and \0
 
 void printWorld(char **world);
-void die(char *cell);
-void live(char *cell);
 char **copyWorld(char **startWorld);
 void evolve(char **startWorld, char **endWorld);
+void reallocWorld(char **world);
 
 int main(){
 
@@ -30,9 +29,8 @@ int main(){
 
     char **worldCopy;
 
-    int n_generations = 10;
+    int n_generations = 3;
 
-    
     for(int i = 0; i < n_generations; i++){
 
         printWorld(world);
@@ -74,7 +72,7 @@ char **copyWorld(char **startWorld){
 
     for(int i = 0; i < height; i++){
 
-        for(int j = 0; j < length -2; j++){
+        for(int j = 0; j < length - 2; j++){
 
             worldCopy[i][j] = startWorld[i][j];
         }
@@ -87,7 +85,7 @@ void evolve(char **startWorld, char **endWorld){
 
     int n_neighbour = 0;
 
-    for(int i = 1; i <= height-2; i++){
+    for(int i = 1; i < height-1; i++){
         for(int j = 1; j < length-3; j++){
             
             n_neighbour = 0;
@@ -106,20 +104,38 @@ void evolve(char **startWorld, char **endWorld){
             if(startWorld[i+1][j] == '|') n_neighbour++;
             if(startWorld[i+1][j+1] == '|') n_neighbour++;
 
-            //printf("cella[%d][%d]: %d vicini\n",i, j, n_neighbour);
-
             if(n_neighbour < 2 || n_neighbour > 3) endWorld[i][j] = '-';
             if(n_neighbour == 3) endWorld[i][j] = '|';
+
+            if((i == (height - 2) || i == 1) && endWorld[i][j] == '|') height += 1;
+            if((i == (length - 3) || i == 1) && endWorld[i][j] == '|') length += 1;
+
+            printf("world[%d][%d]: %c\n", i, j, endWorld[i][j]);
+            printf("Neighbours: %d\n", n_neighbour);
+            
+            if(((i == (height - 2) || i == 1) && endWorld[i][j] == '|') || ((i == (length - 3) || i == 1) && endWorld[i][j] == '|')){
+
+                reallocWorld(startWorld);
+                reallocWorld(endWorld);
+            }
         }
     }
 }
 
-void die(char *cell){
+void reallocWorld(char **world){
 
-    *cell = '-';
-}
+    printf("height: %d\n", height);
+    realloc(world, height * sizeof(char **));
 
-void live(char *cell){
+    for(int i = 0; i < height; i++){
+        
+        //printf("length[%d]: %d\n", i, length);
+        if(*(world+i) != 0){
+            realloc(*(world+i), length * sizeof(char));
+        }else{
 
-    *cell = '|';
+            *(world+i) = (char *)malloc(length * sizeof(char));
+        }
+        printf("%p\n", *(world+i));
+    }
 }
