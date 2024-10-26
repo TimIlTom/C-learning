@@ -4,19 +4,25 @@
 
 int main(){
 
-    int a, b, c;
+    int *a = malloc(5*sizeof(int));
 
-    a = 0;
-    b = 1;
-    printf("%d ", a);
-    printf("%d ", b);
-    for(int i = 0; i < 10; i++){
+    for (int i = 0; i < 5; i++){
 
-        c = a+b;
-        a = b;
-        b = c;
+        *(a+i) = i;
+    }
 
-        printf("%d ", c);
+    for(int i = 0; i < 5; i++){
+
+        printf("%d ", *(a+i));
+    }
+
+    realloc(a, 6*sizeof(int));
+
+    printf("\n");
+
+    for(int i = 0; i < 6; i++){
+
+        printf("%d ", *(a+i));
     }
 
     return 0;
