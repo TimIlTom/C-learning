@@ -7,7 +7,7 @@ int length = 7; //lenght size = height + 2 -> for the \n character and \0
 void printWorld(char **world);
 char **copyWorld(char **startWorld);
 void evolve(char **startWorld, char **endWorld);
-void reallocWorld(char **world);
+void reallocWorldHeight(char **world);
 
 int main(){
 
@@ -37,11 +37,48 @@ int main(){
 
         worldCopy = copyWorld(world);
 
-        evolve(world, worldCopy);
+        for(int i = 0; i < height; i++){
+
+            printf("Pointer to p row %d: %p\n", i, world+i);
+            printf("Pointer to row %d: %p\n\n", i, *(world+i));
+        }
+        //printWorld(world);
+
+        height += 1;
+
+        printf("----------------------------------\n");
+        printf("REALLOC 1\n");
+        printf("----------------------------------\n\n");
+
+        reallocWorldHeight(world);
+
+        for(int i = 0; i < height; i++){
+
+            printf("Pointer to p row %d: %p\n", i, world+i);
+            printf("Pointer to row %d: %p\n\n", i, *(world+i));
+        }
+        //printWorld(world);
+
+        height += 1;
+
+        printf("----------------------------------\n");
+        printf("REALLOC 2\n");
+        printf("----------------------------------\n\n");
+
+        reallocWorldHeight(world);
+
+        for(int i = 0; i < height; i++){
+
+            printf("Pointer to p row %d: %p\n", i, world+i);
+            printf("Pointer to row %d: %p\n\n", i, *(world+i));
+        }
+        //printWorld(world);
+
+        //evolve(world, worldCopy);
 
         //world = copyWorld(worldCopy);
 
-        //free(worldCopy);
+        //printWorld(world);
     }
     
 
@@ -51,6 +88,7 @@ int main(){
 void printWorld(char **world){
 
     printf("\n");
+    printf("heigth: %d\n", height);
     for(int i = 0; i < height; i++){
 
         for (int j = 0; j < length-2; j++){
@@ -90,8 +128,9 @@ void evolve(char **startWorld, char **endWorld){
 
     for(int i = 1; i <= worldYBorder; i++){
 
-        printf("Iterazione startwordl[%d]\n", i);
-        for(int j = 1; j <= worldXBorder; j++){
+        printf("Iterazione startworld[%d]\n", i);
+
+        for(int j = 1; j < worldXBorder; j++){
             
             n_neighbour = 0;
 
@@ -114,32 +153,39 @@ void evolve(char **startWorld, char **endWorld){
             if(n_neighbour == 3) endWorld[i][j] = '|';
 
             //controllo lo stato dei bordi del mondo per espanderlo
-            if(i == 1 && startWorld[i][j] == '|') height += 1;
-            if(i == worldYBorder  && startWorld[i][j] == '|') height += 1;
+            if(i == 1 && startWorld[i][j] == '|'){
 
-            if(j == 1 && startWorld[i][j] == '|') length += 1;
-            if(j == worldXBorder && startWorld[i][j] == '|') length += 1;
+                height += 1;
+                reallocWorldHeight(startWorld);
+            }
 
-            printf("height: %d\n", height);
-            printf("length: %d\n", length);
+            if(i == worldYBorder && startWorld[i][j] == '|'){
+                
+                height += 1;
+                reallocWorldHeight(startWorld);
+            }
+
+            //if(j == 1 && startWorld[i][j] == '|') length += 1;
+            //if(j == worldXBorder && startWorld[i][j] == '|') length += 1;
+
+            printf("world[%d][%d]: %c\n", i, j, startWorld[i][j]);
         }
     }
 }
 
-void reallocWorld(char **world){
+void reallocWorldHeight(char **world){
 
-    printf("height: %d\n", height);
-    realloc(world, height * sizeof(char **));
+    printf("Realloc return value: %p\n", realloc(world, height * sizeof(char **)));
 
-    for(int i = 0; i < height; i++){
+    printf("Pointer position in realloc:  %p\n", world);
 
-        if(*(world+i) != 0){
+    if(world+(height-1) == NULL) printf("NULL pointer");
 
-            realloc(*(world+i), length * sizeof(char));
-        }else{
+    //*(world+(height-1)) = (char *)malloc(length * sizeof(char));
 
-            *(world+i) = (char *)malloc(length * sizeof(char));
-        }
-        printf("%p\n", *(world+i));
-    }
+    /*for(int i = 0; i <= length - 3; i++){
+
+        world[height-1][i] = '-';
+        //printf("Value to row length[%d]: %c\n", i, world[height-1][i]);
+    }*/
 }
