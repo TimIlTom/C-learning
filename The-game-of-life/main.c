@@ -29,7 +29,7 @@ int main(){
 
     char **worldCopy = copyWorld(world);
 
-    int n_generations = 1;
+    int n_generations = 2;
 
     printf("World memory address: %p\n", &world);
 
@@ -42,6 +42,13 @@ int main(){
         printf("World memory address: %p\n", &world);
     }
     
+    printWorld(world);
+
+    /*height += 1;
+
+    reallocWorldHeight(&world);
+
+    printWorld(world);*/
 
     return 0;
 }
@@ -113,12 +120,12 @@ char **evolve(char **startWorld, char **endWorld){
             if(startWorld[i+1][j+1] == '|') n_neighbour++;
 
             //cambio lo stato delle celle
-            if(n_neighbour < 2 || n_neighbour > 3) endWorld[i][j] = '-';
-            if(n_neighbour == 3) endWorld[i][j] = '|';
+            //if(n_neighbour < 2 || n_neighbour > 3) endWorld[i][j] = '-';
+            //if(n_neighbour == 3) endWorld[i][j] = '|';
 
             //controllo lo stato dei bordi del mondo per espanderlo
             if(i == 1 && startWorld[i][j] == '|'){
-
+                
                 height += 1;
                 reallocWorldHeight(&startWorld);
             }
