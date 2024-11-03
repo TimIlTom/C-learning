@@ -8,6 +8,7 @@ void printWorld(char **world);
 char **copyWorld(char **startWorld);
 char **evolve(char **startWorld, char **endWorld);
 void reallocWorldHeight(char ***world, int direction);
+void reallocWorldLength(char ***world, int direction);
 
 int main(){
 
@@ -29,7 +30,7 @@ int main(){
 
     char **worldCopy = copyWorld(world);
 
-    int n_generations = 2;
+    int n_generations = 1;
 
     for(int i = 0; i < n_generations; i++){
 
@@ -81,13 +82,15 @@ char **evolve(char **startWorld, char **endWorld){
     int n_neighbour = 0;
 
     int worldYBorder = height - 2;
-    int worldXBorder = length - 3;
+    int worldXBorder = length - 4;
 
     for(int i = 1; i <= worldYBorder; i++){
 
-        for(int j = 1; j < worldXBorder; j++){
+        for(int j = 1; j <= worldXBorder; j++){
             
             n_neighbour = 0;
+
+            printf("world[%d][%d]: %c\n", i, j, startWorld[i][j]);
 
             //controllo le 3 celle sopra della cella di riferimento
             if(startWorld[i-1][j-1] == '|') n_neighbour++;
@@ -112,6 +115,8 @@ char **evolve(char **startWorld, char **endWorld){
                 
                 height += 1;
                 reallocWorldHeight(&startWorld, 1);
+                i++;
+                worldYBorder++;
             }
 
             if(i == worldYBorder && startWorld[i][j] == '|'){
@@ -120,8 +125,19 @@ char **evolve(char **startWorld, char **endWorld){
                 reallocWorldHeight(&startWorld, 0);
             }
 
-            //if(j == 1 && startWorld[i][j] == '|') length += 1;
-            //if(j == worldXBorder && startWorld[i][j] == '|') length += 1;
+            if(j == 1 && startWorld[i][j] == '|'){
+
+                length += 1;
+                reallocWorldLength(&startWorld, 1);
+                j++;
+                worldXBorder++;
+            }
+            
+            if(j == worldXBorder && startWorld[i][j] == '|'){
+
+                length += 1;
+                reallocWorldLength(&startWorld, 0);
+            }
         }
     }
 
@@ -129,6 +145,8 @@ char **evolve(char **startWorld, char **endWorld){
 }
 
 void reallocWorldHeight(char ***world, int direction){
+
+    printf("Realloc world height: %d\n", height);
 
     *world = realloc(*world, height * sizeof(char **));
 
@@ -159,6 +177,36 @@ void reallocWorldHeight(char ***world, int direction){
                 temp = (*world)[i];
                 (*world)[i] = previousPointer;
                 previousPointer = temp;
+            }
+        }
+    }
+}
+
+void reallocWorldLength(char ***world, int direction){
+
+    printf("Realloc world lenght: %d\n", length);
+
+    for(int i = 0; i < height; i++){
+
+        (*world)[i] = realloc((*world)[i], length * sizeof(char *));
+        (*world)[i][length-3] = '-';
+
+        for(int j = 0; j < length - 3; j++){
+
+            if(direction == 1){
+                
+                char previousChar;
+
+                if(j == 0){
+                    
+                    previousChar = (*world)[i][length-3];;
+                    (*world)[i][j] = (*world)[i][length-3];
+                }else{
+
+                    char temp = (*world)[i][j];
+                    (*world)[i][j] = previousChar;
+                    previousChar = temp;
+                }
             }
         }
     }
