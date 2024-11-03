@@ -8,6 +8,7 @@ Collection of all mini <strong>C</strong> projects with the purpose of learning 
 
 <ol>
     <li>The-game-of-life, <a href="https://it.wikipedia.org/wiki/Gioco_della_vita">wikipedia page</a>.</li>
+    <li>Playground: contains test code!</li>
 </ol>
 
 <em>
