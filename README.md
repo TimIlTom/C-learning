@@ -9,3 +9,7 @@ Collection of all mini <strong>C</strong> projects with the purpose of learning 
 <ol>
     <li>The-game-of-life, <a href="https://it.wikipedia.org/wiki/Gioco_della_vita">wikipedia page</a>.</li>
 </ol>
+
+<em>
+NOTEs: this repository's purpose is to learn, so it will contain a lot of shit!
+</em>
