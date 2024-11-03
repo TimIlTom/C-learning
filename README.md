@@ -1,7 +1,7 @@
 # C-learning
 
 <p>
-Collection of all mini <strong>C</strong> projects with the purpose of learning by doing. The purpose of this repository is not contricted only on C programming but also on <strong>git</strong> and all of it's command, <strong>.md</strong> files and other technology(to add in future).  
+Collection of all mini <strong>C</strong> projects with the purpose of learning by doing. The purpose of this repository is not contricted only on C programming but also on <strong>git</strong> and all of it's command, <strong>.md</strong> files and other technologies(to add in future).  
 </p>
 
 ## List of projects
