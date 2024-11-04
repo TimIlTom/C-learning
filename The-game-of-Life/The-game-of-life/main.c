@@ -27,10 +27,11 @@ int main(){
         fgets(*(world+i), length, worldFile);
     }
 
-    int n_generations = 15;
+    int n_generations = 100;
 
     for(int i = 0; i < n_generations; i++){
 
+        printf("Generazione: %d\n", i);
         printWorld(world);
 
         world = evolve(world);
