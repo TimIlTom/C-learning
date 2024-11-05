@@ -1,4 +1,5 @@
 #include <stdio.h>
+#define SIZE 100000
 
 void identify_identical(int values[][6], int n);
 int identical_right(int snow1[], int snow2[], int start);
@@ -7,14 +8,20 @@ int are_identical(int snow1[], int snow2[]);
 
 int main(){
 
-    int values[][6] = 
-    {
-        {1, 2, 3, 4, 5, 6},
-        {3, 2, 1, 7, 5, 4},
-        {3, 2, 1, 6, 5, 4}
-    };
+    int n;
+    static int snowflakes[SIZE][6];
 
-    identify_identical(values, 3);
+    scanf("%d", &n);
+
+    for(int i = 0; i < n; i++){
+
+        for(int j = 0; j < 6; j++){
+
+            scanf("%d", &snowflakes[i][j]);
+        }
+    }
+
+    identify_identical(snowflakes, n);
 
     return 0;
 }
@@ -71,4 +78,6 @@ int are_identical(int snow1[], int snow2[]){
         if(identical_left(snow1, snow2, start)) return 1;
         if(identical_right(snow1, snow2, start)) return 1;
     }
+
+    return 0;
 }
