@@ -5,6 +5,13 @@ void identify_identical(int values[][6], int n);
 int identical_right(int snow1[], int snow2[], int start);
 int identical_left(int snow1[], int snow2[], int start);
 int are_identical(int snow1[], int snow2[]);
+int code(int snowflake[]);
+
+typedef struct snowflake_node{
+
+    int snowflake[6];
+    struct snowflake_node *next;
+} snowflake_node;
 
 int main(){
 
@@ -80,4 +87,9 @@ int are_identical(int snow1[], int snow2[]){
     }
 
     return 0;
+}
+
+int code(int snowflake[]){
+
+    return(snowflake[0] + snowflake[1] + snowflake[2] + snowflake[3] + snowflake[4] + snowflake[5]) % SIZE;
 }
