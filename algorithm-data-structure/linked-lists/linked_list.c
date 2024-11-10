@@ -8,9 +8,11 @@ typedef struct node{
     struct node *next;
 }node;
 
+//Add new element to the first position of the linked list
 node *add_to_list(node *list, int n);
-
+//Build a linked list based on user input
 node *read_members(void);
+node *search_list(node *list, int n);
 
 int main(){
 
@@ -19,10 +21,7 @@ int main(){
 
     first = read_members();
 
-    for(node *p = first; p != NULL; p = p->next){
-
-        printf("%d ", p->value);
-    }
+    printf("Trovato il numero: %d \n", search_list(first, 10)->value);
 
     return 0;
 }
@@ -56,4 +55,11 @@ node *read_members(void){
         if(n == 0) return first;
         first = add_to_list(first, n);
     }
+}
+
+node *search_list(node *list, int n){
+
+    while(list != NULL && list->value != n) list = list->next;
+
+    return list;
 }
