@@ -13,6 +13,7 @@ node *add_to_list(node *list, int n);
 //Build a linked list based on user input
 node *read_members(void);
 node *search_list(node *list, int n);
+node *delete_node(node *list, int target);
 
 int main(){
 
@@ -20,8 +21,19 @@ int main(){
     node *first = NULL;
 
     first = read_members();
+    
+    for(node *i = first; i != NULL; i = i->next){
 
-    printf("Trovato il numero: %d \n", search_list(first, 10)->value);
+        printf("[%d][%p]->", i->value, i->next);
+    }
+
+    /*printf("Inserisci il numero che vuoi eliminare dalla lista: ");
+    int target;
+    scanf("%d", &target);
+
+    first = delete_node(first, target);
+
+    for(node *i = first; i != NULL; i = i->next) printf("%d ", i->value);*/
 
     return 0;
 }
@@ -61,5 +73,18 @@ node *search_list(node *list, int n){
 
     while(list != NULL && list->value != n) list = list->next;
 
+    return list;
+}
+
+node *delete_node(node *list, int target){
+
+    node *curr, *prev;
+
+    for(curr = list, prev = NULL; curr != NULL && curr->value != target; prev = curr, curr = curr->next);
+
+    if(curr == NULL) return list;
+    if(prev == NULL) list = list->next;
+        else prev->next = curr->next;
+    free(curr);
     return list;
 }
