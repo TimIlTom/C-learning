@@ -9,7 +9,7 @@ typedef struct node{
 }node;
 
 //Add new element to the first position of the linked list
-node *add_to_list(node *list, int n);
+void add_to_list(node **list, int n);
 //Build a linked list based on user input
 node *read_members(void);
 node *search_list(node *list, int n);
@@ -26,19 +26,11 @@ int main(){
 
         printf("[%d][%p]->", i->value, i->next);
     }
-
-    /*printf("Inserisci il numero che vuoi eliminare dalla lista: ");
-    int target;
-    scanf("%d", &target);
-
-    first = delete_node(first, target);
-
-    for(node *i = first; i != NULL; i = i->next) printf("%d ", i->value);*/
-
+    
     return 0;
 }
 
-node *add_to_list(node *list, int n){
+void add_to_list(node **list, int n){
 
     node *new_node = malloc(sizeof(node));
 
@@ -49,9 +41,9 @@ node *add_to_list(node *list, int n){
     }
 
     new_node->value = n;
-    new_node->next = list;
+    new_node->next = *list;
     
-    return new_node;
+    *list = new_node;
 }
 
 node *read_members(void){
@@ -65,7 +57,7 @@ node *read_members(void){
 
         scanf("%d", &n);
         if(n == 0) return first;
-        first = add_to_list(first, n);
+        add_to_list(&first, n);
     }
 }
 
