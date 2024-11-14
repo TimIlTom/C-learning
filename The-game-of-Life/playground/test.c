@@ -2,16 +2,9 @@
 
 int main(){
 
-    char parola[200] = "Fabio sei un cojone";
+    if(!0) printf("0");
 
-    char *pParola = parola;
-
-    while(*pParola){      
-        if(*pParola == ' ') *pParola = '\n';
-        pParola++;
-    }
-
-    printf("%s", parola);
+    if(1) printf("1");
 
     return 0;
 }
