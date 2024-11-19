@@ -8,10 +8,6 @@
 #define hashmask(n) (hashsize(n) - 1)
 #define NUM_BITS 20
 
-unsigned long oaat(char *key, unsigned long len, unsigned long bits);
-password_node *in_hash_table(password_node *hash_table[], char *find);
-void add_to_hash_table(password_node *hash_table[], char *find);
-
 typedef struct password_node
 {
 
@@ -20,43 +16,48 @@ typedef struct password_node
     struct password_node *next;
 } password_node;
 
-int main()
+unsigned long oaat(char *key, unsigned long len, unsigned long bits);
+password_node *in_hash_table(password_node *hash_table[], char *find);
+void add_to_hash_table(password_node *hash_table[], char *find);
+int already_added(char all_substrings[][MAX_PASSWORD + 1], int total_substrings, char *find);
+
+int main(void)
 {
-
-    static char users[MAX_USERS][MAX_PASSWORD + 1];
-    int num_ops, op, op_type, total;
-    char password[MAX_PASSWORD + 1];
-    int num_users = 0;
-
+    static password_node *hash_table[1 << NUM_BITS] = {NULL};
+    int num_ops, op, op_type, i, j;
+    char password[MAX_PASSWORD + 1], substring[MAX_PASSWORD + 1];
+    password_node *password_ptr;
+    int total_substrings;
+    char all_substrings[MAX_PASSWORD * MAX_PASSWORD][MAX_PASSWORD + 1];
     scanf("%d", &num_ops);
-
     for (op = 0; op < num_ops; op++)
     {
-
-        scanf("%d %s", &op_type, password);
-
+        scanf("%d%s", &op_type, password);
         if (op_type == 1)
         {
-
-            strcpy(users[num_users], password);
-            num_users++;
+            total_substrings = 0;
+            for (i = 0; i < strlen(password); i++)
+                for (j = i; j < strlen(password); j++)
+                {
+                    strncpy(substring, &password[i], j - i + 1);
+                    substring[j - i + 1] = '\0';
+                    if (!already_added(all_substrings, total_substrings, substring))
+                    {
+                        add_to_hash_table(hash_table, substring);
+                        strcpy(all_substrings[total_substrings], substring);
+                        total_substrings++;
+                    }
+                }
         }
         else
         {
-            total = 0;
-            for (int j = 0; j < num_users; j++)
-            {
-
-                if (strstr(users[j], password))
-                {
-
-                    total++;
-                }
-            }
-            printf("%d\n", total);
+            password_ptr = in_hash_table(hash_table, password);
+            if (!password_ptr)
+                printf("0\n");
+            else
+                printf("%d\n", password_ptr->total);
         }
     }
-
     return 0;
 }
 
@@ -75,7 +76,8 @@ unsigned long oaat(char *key, unsigned long len, unsigned long bits)
     return hash & hashmask(bits);
 }
 
-password_node *in_hash_table(password_node *hash_table[], char *find){
+password_node *in_hash_table(password_node *hash_table[], char *find)
+{
 
     unsigned password_code;
     password_node *password_ptr;
@@ -83,9 +85,11 @@ password_node *in_hash_table(password_node *hash_table[], char *find){
 
     password_ptr = hash_table[password_code];
 
-    while(password_ptr){
+    while (password_ptr)
+    {
 
-        if(strcmp(password_ptr->password, find) == 0) return password_ptr;
+        if (strcmp(password_ptr->password, find) == 0)
+            return password_ptr;
 
         password_ptr = password_ptr->next;
     }
@@ -93,18 +97,21 @@ password_node *in_hash_table(password_node *hash_table[], char *find){
     return NULL;
 }
 
-void add_to_hash_table(password_node *hash_table[], char *find){
+void add_to_hash_table(password_node *hash_table[], char *find)
+{
 
     unsigned password_code;
     password_node *password_ptr;
 
     password_ptr = in_hash_table(hash_table, find);
 
-    if(password_ptr == NULL){
+    if (password_ptr == NULL)
+    {
 
         password_code = oaat(find, strlen(find), NUM_BITS);
         password_ptr = malloc(sizeof(password_node));
-        if(password_ptr == NULL){
+        if (password_ptr == NULL)
+        {
 
             fprintf(stderr, "malloc error\n");
             exit(1);
@@ -115,6 +122,18 @@ void add_to_hash_table(password_node *hash_table[], char *find){
         password_ptr->next = hash_table[password_code];
         hash_table[password_code] = password_ptr;
     }
-    
+
     password_ptr->total++;
+}
+
+int already_added(char all_substrings[][MAX_PASSWORD + 1], int total_substrings, char *find)
+{
+
+    for (int i = 0; i < total_substrings; i++)
+    {
+
+        if (strcmp(find, all_substrings[i]) == 0)
+            return 1;
+    }
+    return 0;
 }
